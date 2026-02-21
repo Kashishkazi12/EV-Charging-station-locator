@@ -1,0 +1,518 @@
+/* ==========================
+   Global Styles & Variables
+========================== */
+:root {
+  --dark: #021024;
+  --navy: #052659;
+  --blue: #5483b3;
+  --light-blue: #7da0ca;
+  --sky: #c1e8ff;
+  --green: #2ecc71;
+  --white: #f9f9f9;
+}
+
+* {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: var(--white);
+  color: var(--dark);
+  overflow-x: hidden;
+}
+
+/* ==========================
+   Navbar
+========================== */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: var(--dark);
+  color: white;
+  padding: 18px 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--sky);
+  letter-spacing: 1px;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 30px;
+}
+
+.navbar ul li a {
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.navbar ul li a:hover,
+.navbar ul li a.active {
+  color: var(--green);
+}
+
+/* ==========================
+   Hero Section
+========================== */
+/* ---------- HERO (replace existing hero rules with this block) ---------- */
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 90px 9%;
+  height: 60vh; /* Reduced slightly so top part fits better */
+  min-height: 700px;
+  background-image: url("ev img.jpeg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center 20%; /* ✅ shows the top of image clearly */
+  color: white;
+  overflow: hidden;
+}
+
+/* subtle, less-opaque overlay so background is clearer */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom right,
+    rgba(2,16,36,0.55),
+    rgba(2,16,36,0.35)
+  );
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* hero content sits above the overlay */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 48%;
+  animation: fadeInLeft 900ms ease both;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* headline styling */
+.hero h1 {
+  font-size: clamp(34px, 5.2vw, 64px);
+  line-height: 1.02;
+  margin: 0;
+  color: #e6fbff;
+  font-weight: 700;
+  text-shadow: 0 6px 22px rgba(0,0,0,0.48);
+}
+
+/* subtitle */
+.hero p {
+  margin: 0;
+  font-size: clamp(14px, 1.3vw, 20px);
+  color: rgba(245, 250, 255, 0.95);
+}
+
+/* primary CTA */
+/* Sleek CTA Button (Fix for "Find Stations") */
+.btn-primary {
+  display: inline-block;
+  background: var(--green);
+  color: white;
+  padding: 10px 24px;      /* smaller size */
+  border-radius: 40px;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+  border: none;
+  width: auto;             /* ✅ no stretching */
+  min-width: 140px;
+  text-align: center;
+}
+
+.btn-primary:hover {
+  background: #2abf5a;
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+
+/* hero-image sits on top of background, slightly overflowing to the right */
+.hero-image {
+  position: relative;
+  z-index: 2;
+  max-width: 46%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  pointer-events: none;
+}
+
+/* the floating/animated image (car/charger) */
+.hero-image img {
+  width: clamp(320px, 36vw, 540px);
+  max-width: 560px;
+  transform-origin: center;
+  animation: floatCar 4.5s ease-in-out infinite;
+  filter: drop-shadow(0 20px 30px rgba(0,0,0,0.45));
+  will-change: transform;
+}
+
+/* lighter overlay shine animation (optional) */
+@keyframes floatCar {
+  0%   { transform: translateY(0) translateX(0) rotate(0deg); }
+  50%  { transform: translateY(-18px) translateX(6px) rotate(-1deg); }
+  100% { transform: translateY(0) translateX(0) rotate(0deg); }
+}
+
+/* fade-in text animation */
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* make hero responsive on smaller screens */
+@media (max-width: 980px) {
+  .hero { flex-direction: column; padding: 50px 6%; height: auto; min-height: 560px; }
+  .hero-content { max-width: 100%; text-align: left; }
+  .hero-image { max-width: 100%; margin-top: 18px; }
+  .hero-image img { width: min(86vw, 520px); }
+}
+
+/* on very small phones, stack and center text + image */
+@media (max-width: 560px) {
+  .hero { padding: 36px 5%; min-height: 520px; }
+  .hero-content { align-items: center; text-align: center; }
+  .hero h1 { font-size: 28px; }
+  .hero p { font-size: 14px; }
+  .btn-primary { padding: 10px 20px; }
+}
+
+/* ==========================
+   Search Section
+========================== */
+.search-section {
+  text-align: center;
+  padding: 80px 20px 40px;
+  background: #fff;
+}
+
+.search-heading {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--green);
+  text-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+  margin-bottom: 25px;
+  animation: fadeIn 1s ease;
+}
+
+#searchBar {
+  width: 60%;
+  max-width: 550px;
+  padding: 14px 20px;
+  border-radius: 50px;
+  border: 2px solid var(--blue);
+  outline: none;
+  font-size: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+}
+
+#searchBar:focus {
+  border-color: var(--green);
+  box-shadow: 0 6px 20px rgba(0, 128, 0, 0.2);
+}
+
+#searchResults {
+  margin-top: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  animation: fadeIn 0.6s ease;
+}
+
+/* Search Result Cards */
+.search-result-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 250px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  transition: all 0.3s;
+}
+
+.search-result-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+/* ==========================
+   Popular Cities
+========================== */
+.popular-cities {
+  background: var(--blue);
+  color: white;
+  padding: 80px 30px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.popular-cities h2 {
+  font-size: 32px;
+  margin-bottom: 30px;
+  animation: fadeIn 1s ease-in;
+}
+
+.city-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.city-card {
+  background: var(--light-blue);
+  padding: 25px;
+  border-radius: 10px;
+  text-align: center;
+  transition: transform 0.3s ease;
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.city-card:hover {
+  transform: scale(1.05);
+  background: var(--green);
+}
+
+/* ==========================
+   Statistics Section
+========================== */
+.stats-section {
+  background: var(--dark);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px;
+  gap: 100px;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  text-align: center;
+  animation: fadeIn 1s ease;
+}
+
+.stat-card h3 {
+  font-size: 50px;
+  color: var(--sky);
+  margin-bottom: 8px;
+  text-shadow: 0 0 15px rgba(193, 232, 255, 0.8);
+}
+
+.stat-card p {
+  font-size: 18px;
+  color: #ddd;
+}
+
+/* ==========================
+   Station Section
+========================== */
+.stations {
+  padding: 70px 30px;
+  text-align: center;
+  background: var(--white);
+}
+
+.stations h2 {
+  margin-bottom: 30px;
+  color: var(--navy);
+}
+
+.station-list {
+  display: none;
+}
+
+.station-list.open {
+  display: block;
+  animation: fadeIn 0.6s ease;
+}
+
+.stations-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px;
+}
+
+.station {
+  background: #fff;
+  padding: 18px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 260px;
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.station.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.station button {
+  margin-top: 10px;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.book-btn {
+  background: var(--green);
+  color: white;
+}
+
+.book-btn:hover {
+  background: #27ae60;
+}
+
+.cancel-btn {
+  background: red;
+  color: white;
+}
+
+/* ==========================
+   Booking Modal
+========================== */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  width: 380px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  animation: fadeIn 0.4s ease;
+}
+
+.modal-content input, .modal-content select, .modal-content button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.modal-content button {
+  background: var(--green);
+  color: white;
+  border: none;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.modal-content button:hover {
+  background: #27ae60;
+}
+
+/* ==========================
+   Payment Overlay
+========================== */
+.payment-confirm {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2500;
+}
+
+.payment-confirm-box {
+  background: white;
+  padding: 25px;
+  width: 380px;
+  text-align: center;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+}
+
+.payment-confirm-box img {
+  max-width: 200px;
+  border: 4px solid #eee;
+  border-radius: 10px;
+}
+
+.btn-primary, .btn-secondary {
+  padding: 10px 16px;
+  margin: 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background: var(--green);
+  color: white;
+}
+
+.btn-secondary {
+  background: #555;
+  color: white;
+}
+
+/* ==========================
+   Footer
+========================== */
+footer {
+  background: var(--dark);
+  color: white;
+  text-align: center;
+  padding: 25px;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+}
+
+/* ==========================
+   Animations
+========================== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="style.css">
+
+  <title>Admin Panel</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+</head>
+<body>
+  <h2>Admin Dashboard</h2>
+
+  <h3>Charging Stations</h3>
+  <div id="admin-station-list">
+    <!-- Stations with toggle buttons will appear here -->
+  </div>
+
+  <h3>All Bookings</h3>
+  <div id="admin-booking-list">
+    <!-- Booking data will appear here -->
+  </div>
+
+  <p><a href="index.html">Back to Home</a></p>
+
+  <script type="module">
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+  const auth = getAuth();
+  const allowedAdmin = "your-email@gmail.com"; // 🔁 Change to your actual email
+
+  onAuthStateChanged(auth, (user) => {
+    if (!user || user.email !== allowedAdmin) {
+      alert("Access Denied! Only Admins allowed.");
+      window.location.href = "index.html";
+    }
+  });
+</script>
+
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EV Spot — Admin Dashboard</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root{
+      --bg: #021024;
+      --card: rgba(255,255,255,0.06);
+      --accent: #32cd32;
+      --muted: rgba(255,255,255,0.75);
+      --danger: #ff4d4d;
+      --glass-border: rgba(255,255,255,0.08);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: "Poppins", sans-serif;
+      background: var(--bg);
+      color: #fff;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    header{
+      padding:16px 24px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+    }
+    header h1{ margin:0; color:#c1e8ff; font-size:20px; display:flex; gap:8px; align-items:center; }
+
+    .container{
+      display:flex;
+      gap:24px;
+      padding:28px;
+      align-items:flex-start;
+      width:100%;
+    }
+
+    .side { width:320px; min-width:260px; }
+    .main { flex:1; min-width: 360px; }
+
+    .card{
+      background: var(--card);
+      border-radius:12px;
+      padding:16px;
+      margin-bottom:18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border: 1px solid var(--glass-border);
+    }
+
+    .btn {
+      background: var(--accent);
+      color: #012;
+      padding:8px 12px;
+      border-radius:8px;
+      border:none;
+      font-weight:600;
+      cursor:pointer;
+    }
+    .btn.ghost { background:transparent; color:var(--muted); border:1px solid rgba(255,255,255,0.06); }
+    .btn.danger { background:var(--danger); color:white; }
+
+    table{ width:100%; border-collapse:collapse; font-size:14px; }
+    th, td{ padding:10px 8px; border-bottom:1px solid rgba(255,255,255,0.04); text-align:left; }
+    th{ color:#c1e8ff; background: rgba(255,255,255,0.02); font-weight:600; position:sticky; top:0; z-index:2; }
+
+    .station-card {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
+      padding:10px;
+      border-radius:10px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+    .status-pill { padding:6px 8px; border-radius:8px; font-weight:600; font-size:13px; }
+    .status-online { background: rgba(50,205,50,0.12); color: var(--accent); border:1px solid rgba(50,205,50,0.14); }
+    .status-offline { background: rgba(255,255,255,0.03); color: rgba(255,255,255,0.8); border:1px solid rgba(255,255,255,0.03); }
+
+    .modal {
+      position:fixed;
+      inset:0;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background: rgba(0,0,0,0.6);
+      z-index:9999;
+    }
+    .modal .box {
+      width:380px;
+      background: var(--card);
+      padding:20px;
+      border-radius:12px;
+      border:1px solid var(--glass-border);
+    }
+    .modal label{ display:block; margin-top:10px; font-size:13px; color:var(--muted); }
+    .modal input{ width:100%; padding:10px; margin-top:6px; border-radius:8px; border:none; background:rgba(255,255,255,0.03); color:white; }
+
+    .note { color:var(--muted); font-size:13px; margin-top:8px; }
+
+    #adminContent { display:none; }
+  </style>
+</head>
+<body>
+  <!-- 🔐 ADMIN DASHBOARD CONTENT (hidden until verified) -->
+  <div id="adminContent">
+    <header>
+      <h1>⚡ EV Spot Admin Dashboard</h1>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <span id="adminEmailDisplay" style="color:#aaa; font-size:13px;"></span>
+        <button id="exportCsvBtn" class="btn ghost">Export CSV</button>
+        <button id="logoutBtn" class="btn">Logout</button>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="main">
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <h3>Bookings</h3>
+            <div>
+              <select id="filterStation" style="padding:8px; border-radius:8px; background:transparent; color:white; border:1px solid rgba(255,255,255,0.1);">
+                <option value="">Filter by station</option>
+              </select>
+              <button id="refreshBtn" class="btn ghost">Refresh</button>
+            </div>
+          </div>
+
+          <div style="overflow:auto; max-height:520px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>User</th><th>Phone</th><th>Station</th><th>Date</th><th>Time</th><th>Duration</th><th>Payment</th><th>Status</th><th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="bookingTableBody">
+                <tr><td colspan="9" style="text-align:center; color:#999;">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="side">
+        <div class="card">
+          <h3>Station Status</h3>
+          <div id="stationStatusList">Loading...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔒 LOGIN MODAL -->
+  <div id="loginModal" class="modal" style="display:none;">
+    <div class="box">
+      <h3 style="margin:0 0 8px 0; color:#c1e8ff">Admin Login</h3>
+      <div class="note">Sign in with admin credentials</div>
+
+      <label>Email</label>
+      <input id="adminEmail" type="email" placeholder="admin@example.com" />
+
+      <label>Password</label>
+      <input id="adminPassword" type="password" placeholder="password" />
+
+      <div style="display:flex; gap:8px; margin-top:12px;">
+        <button id="adminSignInBtn" class="btn">Sign in</button>
+        <button id="closeModalBtn" class="btn ghost">Close</button>
+      </div>
+      <div id="loginError" class="note" style="color:#ff9b9b; display:none;"></div>
+    </div>
+  </div>
+
+  <!-- 🔥 Firebase + JS -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import {
+      getFirestore, collection, getDocs, doc, getDoc, deleteDoc
+    } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+    import {
+      getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB2FuzvGI87DGGVxjFpXZ1X1igegHMFGlY",
+      authDomain: "ev-charging-system-18255.firebaseapp.com",
+      projectId: "ev-charging-system-18255",
+      storageBucket: "ev-charging-system-18255.firebasestorage.app",
+      messagingSenderId: "128058709073",
+      appId: "1:128058709073:web:c47cf512c42d72b6e29470"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth();
+
+    const adminContent = document.getElementById("adminContent");
+    const loginModal = document.getElementById("loginModal");
+    const loginError = document.getElementById("loginError");
+    const adminEmailInput = document.getElementById("adminEmail");
+    const adminPasswordInput = document.getElementById("adminPassword");
+    const adminSignInBtn = document.getElementById("adminSignInBtn");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const adminEmailDisplay = document.getElementById("adminEmailDisplay");
+    const exportCsvBtn = document.getElementById("exportCsvBtn");
+    const bookingTableBody = document.getElementById("bookingTableBody");
+    const stationStatusList = document.getElementById("stationStatusList");
+    const filterStation = document.getElementById("filterStation");
+    const refreshBtn = document.getElementById("refreshBtn");
+
+    const fallbackAdminEmails = ["kashishkazi002@gmail.com"]; // 👈 Replace with your admin email
+
+    async function isAdminEmail(email) {
+      if (!email) return false;
+      try {
+        const snap = await getDoc(doc(db, "meta", "admins"));
+        if (snap.exists()) {
+          const data = snap.data();
+          if (Array.isArray(data.emails)) return data.emails.includes(email.toLowerCase());
+        }
+      } catch (e) { console.warn("Admin check error:", e); }
+      return fallbackAdminEmails.includes(email.toLowerCase());
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const email = (user.email || "").toLowerCase();
+        const ok = await isAdminEmail(email);
+        if (!ok) {
+          await signOut(auth);
+          adminContent.style.display = "none";
+          showLoginModal("Not an admin account. Please sign in with admin credentials.");
+          return;
+        }
+        adminEmailDisplay.textContent = email;
+        hideLoginModal();
+        adminContent.style.display = "block";
+        loadStations();
+        loadBookings();
+      } else {
+        adminContent.style.display = "none";
+        showLoginModal();
+      }
+    });
+
+    function showLoginModal(msg) {
+      loginModal.style.display = "flex";
+      loginError.style.display = msg ? "block" : "none";
+      loginError.textContent = msg || "";
+    }
+    function hideLoginModal() { loginModal.style.display = "none"; }
+
+    closeModalBtn.addEventListener("click", () => {
+      alert("You must sign in as admin to access the dashboard.");
+    });
+
+    adminSignInBtn.addEventListener("click", async () => {
+      const email = adminEmailInput.value.trim();
+      const password = adminPasswordInput.value.trim();
+      if (!email || !password) {
+        loginError.style.display = "block";
+        loginError.textContent = "Please enter email and password.";
+        return;
+      }
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (err) {
+        loginError.style.display = "block";
+        loginError.textContent = "Login failed: " + err.message;
+      }
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      await signOut(auth);
+      adminContent.style.display = "none";
+      showLoginModal();
+    });
+
+    async function loadStations() {
+      const qSnap = await getDocs(collection(db, "stations"));
+      stationStatusList.innerHTML = "";
+      filterStation.innerHTML = `<option value="">Filter by station</option>`;
+      qSnap.forEach(docSnap => {
+        const d = docSnap.data();
+        const name = d.name || d.Name || docSnap.id;
+        const status = (d.status || d.Status || "offline").toLowerCase();
+        const div = document.createElement("div");
+        div.className = "station-card";
+        div.innerHTML = `
+          <div>${name}</div>
+          <div class="status-pill ${status === 'online' ? 'status-online' : 'status-offline'}">${status.toUpperCase()}</div>`;
+        stationStatusList.appendChild(div);
+
+        const opt = document.createElement("option");
+        opt.value = docSnap.id;
+        opt.textContent = name;
+        filterStation.appendChild(opt);
+      });
+    }
+
+    async function loadBookings(filter = "") {
+      const qSnap = await getDocs(collection(db, "bookings"));
+      bookingTableBody.innerHTML = "";
+      qSnap.forEach(docSnap => {
+        const b = docSnap.data();
+        if (filter && b.stationId !== filter) return;
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${b.name || "-"}</td>
+          <td>${b.phone || "-"}</td>
+          <td>${b.stationId || "-"}</td>
+          <td>${b.date || "-"}</td>
+          <td>${b.time || "-"}</td>
+          <td>${b.duration || "-"} mins</td>
+          <td>${b.paymentMethod || "-"}</td>
+          <td>${b.status || "Booked"}</td>
+          <td><button class="btn danger" data-id="${docSnap.id}">Delete</button></td>
+        `;
+        tr.querySelector("button").addEventListener("click", async () => {
+          if (confirm("Delete this booking?")) {
+            await deleteDoc(doc(db, "bookings", docSnap.id));
+            alert("Deleted");
+            loadBookings();
+          }
+        });
+        bookingTableBody.appendChild(tr);
+      });
+    }
+
+    refreshBtn.addEventListener("click", () => loadBookings(filterStation.value));
+    filterStation.addEventListener("change", () => loadBookings(filterStation.value));
+
+    exportCsvBtn.addEventListener("click", async () => {
+      const qSnap = await getDocs(collection(db, "bookings"));
+      const rows = [["User","Phone","Station","Date","Time","Duration","Payment","Status"]];
+      qSnap.forEach(docSnap => {
+        const b = docSnap.data();
+        rows.push([b.name,b.phone,b.stationId,b.date,b.time,b.duration,b.paymentMethod,b.status]);
+      });
+      const csv = rows.map(r => r.join(",")).join("\n");
+      const blob = new Blob([csv], {type:"text/csv"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "bookings.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  </script>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

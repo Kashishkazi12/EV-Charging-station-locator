@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book EV Charging Slot | EV Spot</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --dark: #021024;
+      --blue: #5483b3;
+      --sky: #c1e8ff;
+      --green: #32cd32;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #021024;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 80px 20px;
+      overflow-y: auto;
+    }
+
+    .card {
+      width: 420px;
+      padding: 32px 28px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #fff;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    @keyframes fadeInUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .brand .logo {
+      font-size: 22px;
+      font-weight: bold;
+      color: var(--sky);
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--sky);
+      margin-bottom: 25px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    label {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    select, input {
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      outline: none;
+      font-size: 14px;
+      width: 100%;
+    }
+
+    select option {
+      background: #021024;
+      color: white;
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .btn {
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: var(--green);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: #28a428;
+      transform: translateY(-2px);
+    }
+
+    .muted {
+      text-align: center;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.8);
+      margin-top: 20px;
+    }
+
+    .muted a {
+      color: var(--sky);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .divider {
+      text-align: center;
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+      margin: 20px 0;
+      position: relative;
+    }
+    .divider::before, .divider::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 40%;
+      height: 1px;
+      background: rgba(255,255,255,0.3);
+    }
+    .divider::before { left: 0; }
+    .divider::after { right: 0; }
+
+    .time-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 50px 16px; }
+      .card { width: 100%; padding: 24px; }
+      .time-row { flex-direction: column; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <div class="brand">
+      <div class="logo">⚡</div>
+      <h2>Book Charging Slot</h2>
+    </div>
+
+    <form id="booking-form">
+      <label for="station-select">Select Station</label>
+      <select id="station-select" required>
+        <option value="">-- Choose your station --</option>
+      </select>
+
+      <label for="date">Select Date</label>
+      <input type="date" id="date" required>
+
+      <label for="time-slot">Select Time</label>
+      <div class="time-row">
+        <select id="hour" required>
+          <option value="">Hour</option>
+        </select>
+        <select id="minute" required>
+          <option value="">Min</option>
+        </select>
+        <select id="ampm" required>
+          <option value="AM">AM</option>
+          <option value="PM">PM</option>
+        </select>
+      </div>
+
+      <label for="duration">Charging Duration (mins)</label>
+      <input type="number" id="duration" min="15" max="180" placeholder="e.g. 60" required>
+
+      <div class="divider">Payment Details</div>
+
+      <label for="paymentMethod">Payment Method</label>
+      <select id="paymentMethod" required>
+        <option value="">Select Payment Type</option>
+        <option value="UPI">UPI</option>
+        <option value="Card">Credit/Debit Card</option>
+      </select>
+
+      <label for="upi-id">UPI ID (optional)</label>
+      <input type="text" id="upi-id" placeholder="e.g. yourname@upi">
+
+      <button type="submit" class="btn">Confirm Booking</button>
+    </form>
+
+    <div class="muted">
+      <p>Want to go back? <a href="index.html">Home</a></p>
+    </div>
+  </div>
+
+  <script>
+    // Populate hour & minute dropdowns dynamically
+    const hourSelect = document.getElementById("hour");
+    const minuteSelect = document.getElementById("minute");
+
+    for (let h = 1; h <= 12; h++) {
+      const opt = document.createElement("option");
+      opt.value = h;
+      opt.textContent = h.toString().padStart(2, "0");
+      hourSelect.appendChild(opt);
+    }
+
+    for (let m = 0; m < 60; m += 5) {
+      const opt = document.createElement("option");
+      opt.value = m;
+      opt.textContent = m.toString().padStart(2, "0");
+      minuteSelect.appendChild(opt);
+    }
+
+    // Form handler (demo)
+    document.getElementById("booking-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const hour = hourSelect.value;
+      const min = minuteSelect.value;
+      const ampm = document.getElementById("ampm").value;
+      const time = `${hour}:${min} ${ampm}`;
+      alert(`Booking Confirmed!\nTime: ${time}`);
+    });
+  </script>
+</body>
+</html>

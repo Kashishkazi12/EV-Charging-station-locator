@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EV Spot | Register</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --dark: #021024;
+      --navy: #052659;
+      --blue: #5483b3;
+      --light-blue: #7da0ca;
+      --sky: #c1e8ff;
+      --green: #32cd32;
+      --white: #f9f9f9;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #021024;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 60px 20px; /* spacing around card */
+      overflow-y: auto; /* ✅ allows scrolling when needed */
+    }
+
+    .card {
+      width: 400px;
+      padding: 32px 28px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #fff;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    @keyframes fadeInUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .brand .logo {
+      font-size: 22px;
+      font-weight: bold;
+      color: var(--sky);
+    }
+
+    .brand h2 {
+      margin: 0;
+      font-size: 20px;
+      color: var(--sky);
+    }
+
+    .subtitle {
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 20px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    label {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    input, select {
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      outline: none;
+      font-size: 14px;
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      margin-top: 6px;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: var(--green);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: #28a428;
+      transform: translateY(-2px);
+    }
+
+    .muted {
+      text-align: center;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.8);
+      margin-top: 12px;
+    }
+
+    .muted a {
+      color: var(--sky);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    #otp-area {
+      display: none;
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    #otp-area input {
+      width: 150px;
+      margin: 8px auto;
+      display: block;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 6px;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 40px 16px;
+      }
+      .card {
+        width: 100%;
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <div class="brand">
+      <div class="logo">⚡ EV Spot</div>
+      <h2>Create Account</h2>
+    </div>
+
+    <div class="subtitle">Join us and drive into the future of EV charging 🚗⚡</div>
+
+    <form id="register-form-local">
+      <label for="reg-name">Full Name</label>
+      <input id="reg-name" type="text" placeholder="Your full name" required />
+
+      <label for="reg-email">Email</label>
+      <input id="reg-email" type="email" placeholder="you@example.com" required />
+
+      <label for="reg-password">Password</label>
+      <input id="reg-password" type="password" placeholder="Create a password" required />
+      <div class="hint">Use 8+ characters with letters & numbers.</div>
+
+      <label for="reg-phone">Phone (for OTP)</label>
+      <div class="row">
+        <input id="reg-phone" type="text" placeholder="+91XXXXXXXXXX" required />
+        <button id="sendOtpBtn" type="button" class="btn" style="padding:10px 12px;">Send OTP</button>
+      </div>
+
+      <div id="otp-area">
+        <label for="reg-otp">Enter OTP</label>
+        <input id="reg-otp" type="text" placeholder="6-digit code" />
+        <div style="display:flex; gap:8px; justify-content:center; margin-top:8px;">
+          <button id="verifyOtpBtn" type="button" class="btn" style="padding:8px 12px;">Verify</button>
+          <button id="resendOtpBtn" type="button" class="btn" style="background:#666;">Resend</button>
+        </div>
+      </div>
+
+      <label for="reg-city">City (optional)</label>
+      <select id="reg-city">
+        <option value="">Select city</option>
+        <option>Nashik</option>
+        <option>Mumbai</option>
+        <option>Pune</option>
+        <option>Delhi</option>
+      </select>
+
+      <button id="registerBtn" type="submit" class="btn">Register</button>
+    </form>
+
+    <div class="muted">Already have an account? <a href="login.html">Login</a></div>
+  </div>
+
+  <div id="recaptcha-container" style="display:none;"></div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <script type="module" src="app.js"></script>
+
+  <script>
+    const sendOtpBtn = document.getElementById('sendOtpBtn');
+    const otpArea = document.getElementById('otp-area');
+    const resendOtpBtn = document.getElementById('resendOtpBtn');
+
+    sendOtpBtn?.addEventListener('click', () => {
+      otpArea.style.display = 'block';
+      alert('OTP sent (demo)');
+    });
+    resendOtpBtn?.addEventListener('click', () => alert('Resent OTP (demo)'));
+  </script>
+</body>
+</html>

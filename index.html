@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EV Charging Station Locator ⚡</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+
+    <!-- ✅ Navbar -->
+    <nav class="navbar">
+      <div class="logo">⚡ EV ChargeNow</div>
+      <ul>
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="register.html">Register</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="booking.html">Book Slot</a></li>
+      </ul>
+    </nav>
+
+    <!-- ✅ Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Charge Smart. Drive Green.🌱</h1>
+        <p>  Locate and book nearby EV charging stations in seconds.</p>
+        <a href="#search" class="btn-primary">Find Stations</a>
+      </div>
+      <div class="hero-image">
+        <img src="pump.jpeg" alt="EV Charging" />
+      </div>
+    </section>
+
+    <!-- ✅ Search Section -->
+    <section id="search" class="search-section">
+      <h2 class="search-heading">🔍 Search Charging Stations</h2>
+      <input
+        type="text"
+        id="searchBar"
+        placeholder="Enter city or station name..."
+        autocomplete="off"
+      />
+      <div id="searchResults"></div>
+    </section>
+
+    <!-- ✅ Popular Cities Section -->
+    <section class="popular-cities">
+      <h2>🌆 Popular Cities</h2>
+      <div id="cityGrid" class="city-grid"></div>
+    </section>
+
+    <!-- ✅ Statistics Section -->
+    <section class="stats-section">
+      <div class="stat-card">
+        <h3 class="stat-value" data-target="8">0</h3>
+        <p>Active Stations</p>
+      </div>
+      <div class="stat-card">
+        <h3 class="stat-value" data-target="7">0</h3>
+        <p>Total Bookings</p>
+      </div>
+      <div class="stat-card">
+        <h3 class="stat-value" data-target="3">0</h3>
+        <p>Cities Connected</p>
+      </div>
+    </section>
+
+    <!-- ✅ Available Stations -->
+    <section id="stations" class="stations">
+      <h2 id="stationListTitle">⚡ Available Charging Stations</h2>
+      <div id="stationList" class="station-list">
+        <span id="backBtn" class="back-btn">← Back to Cities</span>
+        <div id="stationsContainer" class="stations-container"></div>
+      </div>
+    </section>
+
+    <!-- ✅ Booking Modal -->
+    <div id="bookingModal" class="modal">
+      <div class="modal-content">
+        <span id="closeModal" class="close">&times;</span>
+        <h3>Book Charging Slot</h3>
+        <form id="bookingFormModal">
+          <input type="hidden" id="stationIdInput" />
+          <label>Your Name:</label>
+          <input type="text" id="userName" placeholder="Enter your name" required />
+          <label>Phone:</label>
+          <input type="tel" id="userPhone" placeholder="Enter phone number" required />
+          <label>Date:</label>
+          <input type="date" id="dateSlot" required />
+          <label>Time:</label>
+          <input type="time" id="timeSlot" required />
+          <label>Duration (mins):</label>
+          <input type="number" id="duration" value="60" required />
+          <label>Payment Method:</label>
+          <select id="paymentMethod">
+            <option>UPI</option>
+            <option>Credit Card</option>
+            <option>Cash</option>
+          </select>
+          <button type="submit">Proceed to Payment</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ✅ Fake Payment Confirmation -->
+    <div id="paymentConfirm" class="payment-confirm" style="display:none;">
+      <div class="payment-confirm-box">
+        <h3>Scan & Pay via UPI</h3>
+        <div id="qrBox"></div>
+        <p><strong>After payment:</strong></p>
+        <button id="paidBtn" class="btn-primary">✅ I Paid</button>
+        <button id="paymentFailedBtn" class="btn-secondary">❌ Payment Failed</button>
+      </div>
+    </div>
+
+    <!-- ✅ Footer -->
+    <footer>
+      <p>© 2025 EV ChargeNow | Smart Charging for a Green Future 🌍</p>
+    </footer>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

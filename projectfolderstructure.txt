@@ -1,0 +1,8 @@
+ev-charging-project/
+├── index.html         ← Home page (Station listing)
+├── login.html         ← User login
+├── register.html      ← User registration
+├── booking.html       ← Slot booking
+├── admin.html         ← Admin dashboard
+├── app.js             ← JS logic (Firebase + DOM)
+├── style.css          ← Optional CSS
